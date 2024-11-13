@@ -26,6 +26,36 @@
                 </div>
                 @endrole
 
+
+                <!-- Enlace para Productos, visible solo para empresas -->
+                @role('empresa')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('productos.create') }}" :active="request()->routeIs('productos.create')">
+                        {{ __('Publicar Producto') }}
+                    </x-nav-link>
+                </div>
+
+                @endrole
+
+                <x-nav-link href="{{ route('productos.index') }}" :active="request()->routeIs('productos.index')">
+                      {{ __('Productos') }}
+                </x-nav-link>
+
+                @role('postulante')
+                <a href="{{ route('carrito.index') }}" class="relative text-gray-300 hover:text-white">
+                    <i class="fas fa-shopping-cart text-2xl"></i>
+                    @if(session('carrito') && count(session('carrito')) > 0)
+                        <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">
+                           {{ count(session('carrito')) }}
+                        </span>
+                    @endif
+                </a>
+                @endrole
+
+
+
+
+
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">

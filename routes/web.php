@@ -1,37 +1,66 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CarritoController;
+use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Route;
 
-// Ruta de la página de inicio (home)
+// Rutas principales
 Route::get('/', function () {
     return view('welcome'); // Asegúrate de tener una vista llamada 'welcome'
 })->name('home');
 
-// Ruta de inicio de sesión con método POST para manejar el formulario
-Route::post('login', [LoginController::class, 'login'])->name('login.post');
-
-
-
-// Ruta para el dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// Rutas personalizadas para gestión de usuarios
-Route::get('usuarios/pending', [UsuarioController::class, 'pending'])->name('usuarios.pending');
-Route::patch('usuarios/{id}/approve', [UsuarioController::class, 'approve'])->name('usuarios.approve');
+// Autenticación
+Route::post('login', [LoginController::class, 'login'])->name('login.post');
 
-// Rutas RESTful para gestión de usuarios
-Route::resource('usuarios', UsuarioController::class)->names([
-    'index' => 'usuarios.index',
-    'create' => 'usuarios.create',
-    'store' => 'usuarios.store',
-    'show' => 'usuarios.show',
-    'edit' => 'usuarios.edit',
-    'update' => 'usuarios.update',
-    'destroy' => 'usuarios.destroy',
-]);
+// Gestión de usuarios
+Route::prefix('usuarios')->name('usuarios.')->group(function () {
+    Route::get('pending', [UsuarioController::class, 'pending'])->name('pending');
+    Route::patch('{id}/approve', [UsuarioController::class, 'approve'])->name('approve');
+    Route::resource('/', UsuarioController::class)->names([
+        'index' => 'index',
+        'create' => 'create',
+        'store' => 'store',
+        'show' => 'show',
+        'edit' => 'edit',
+        'update' => 'update',
+        'destroy' => 'destroy',
+    ]);
+});
+
 Route::get('/waiting-for-approval', function () {
     return view('auth.waiting_for_approval');
 })->name('approval.wait');
+
+// Gestión de productos
+Route::resource('productos', ProductoController::class)->names([
+    'index' => 'productos.index',
+    'create' => 'productos.create',
+    'store' => 'productos.store',
+    'show' => 'productos.show',
+    'edit' => 'productos.edit',
+    'update' => 'productos.update',
+    'destroy' => 'productos.destroy',
+]);
+
+// Carrito de compras
+Route::prefix('carrito')->name('carrito.')->group(function () {
+    Route::get('/', [CarritoController::class, 'verCarrito'])->name('index');
+    Route::post('agregar/{id}', [CarritoController::class, 'agregarAlCarrito'])->name('agregar');
+    Route::post('actualizar/{id}', [CarritoController::class, 'actualizarCantidad'])->name('actualizar');
+    Route::delete('eliminar/{id}', [CarritoController::class, 'eliminarDelCarrito'])->name('eliminar');
+});
+
+Route::post('/comprar', [CarritoController::class, 'comprar'])->name('comprar');
+
+Route::get('/checkout', [CarritoController::class, 'mostrarFormularioPago'])->name('carrito.checkout');
+Route::post('/procesar-compra', [CarritoController::class, 'procesarCompra'])->name('carrito.procesarCompra');
+Route::post('/comprar', [CarritoController::class, 'procesarCompra'])->name('comprar');
+
+
+//pdf
+Route::post('/procesar-compra', [CarritoController::class, 'procesarCompra'])->name('carrito.procesarCompra');
