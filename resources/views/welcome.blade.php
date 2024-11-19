@@ -9,7 +9,6 @@
     <!-- Font Awesome para íconos -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        /* Estilos para el logo y navegación */
         .logo {
             font-family: Arial, sans-serif;
             font-weight: bold;
@@ -19,10 +18,10 @@
             align-items: center;
         }
         .logo .accent {
-            color: #FFAA00; /* Color amarillo para el acento */
+            color: #FFAA00;
             margin-left: -5px;
         }
-        .navbar-bg { background-color: #1a1a1a; } /* Fondo oscuro similar a AliExpress */
+        .navbar-bg { background-color: #1a1a1a; }
         .primary-btn {
             background-color: #1a56db;
             color: #fff;
@@ -39,20 +38,17 @@
 </head>
 <body class="bg-gray-100">
 
-    <!-- Menú de navegación fijo en la parte superior con logo -->
+    <!-- Menú de navegación -->
     <nav class="navbar-bg p-4 flex justify-between items-center shadow-md fixed w-full z-30 top-0">
-        <!-- Logo de UpeuExpress -->
         <div class="flex items-center space-x-3">
             <div class="logo">
                 Upeu<span class="accent">Express</span>
             </div>
         </div>
-        <!-- Barra de búsqueda -->
         <div class="w-1/2 relative">
             <input type="text" placeholder="Buscar productos..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
             <button class="absolute right-0 top-0 bottom-0 px-4 text-white bg-blue-600 rounded-r-lg"><i class="fas fa-search"></i></button>
         </div>
-        <!-- Enlaces de usuario -->
         <div class="flex items-center space-x-6">
             <a href="{{ route('login') }}" class="text-gray-300 hover:text-white">Iniciar Sesión</a>
             <a href="{{ route('register') }}" class="text-gray-300 hover:text-white">Registrar</a>
@@ -60,8 +56,8 @@
         </div>
     </nav>
 
-    <!-- Menú de opciones fijo debajo de la barra de navegación y búsqueda -->
-    <div class="bg-blue-600 py-3 fixed w-full top-20 z-20 shadow-md"> <!-- Ajuste top-20 para mayor separación -->
+    <!-- Menú de categorías -->
+    <div class="bg-blue-600 py-3 fixed w-full top-20 z-20 shadow-md">
         <div class="container mx-auto flex justify-around text-white">
             <a href="#" class="hover:underline">Electrónica</a>
             <a href="#" class="hover:underline">Moda</a>
@@ -73,8 +69,7 @@
         </div>
     </div>
 
-    <!-- Ajuste para el resto del contenido (para evitar ser tapado por el menú fijo) -->
-    <div class="mt-40"></div> <!-- Espacio suficiente para el contenido -->
+    <div class="mt-40"></div>
 
     <!-- Banner Principal -->
     <section class="bg-banner flex items-center justify-center text-white text-center mt-16">
@@ -89,28 +84,37 @@
     <section class="container mx-auto mt-10 px-4">
         <h2 class="section-title text-center mb-6">Ofertas del Día</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <!-- Ejemplo de productos -->
-            @foreach (['imagen2.jpg', 'imagen3.jpg', 'imagen4.jpg', 'imagen5.jpg'] as $imagen)
-                <div class="bg-white p-4 rounded-lg shadow-lg product-card">
-                    <img src="/imagenes/{{ $imagen }}" alt="Producto" class="w-full h-40 object-cover mb-4 rounded">
-                    <h3 class="text-lg font-bold text-gray-700">Producto {{ $loop->index + 1 }}</h3>
-                    <p class="text-blue-600 font-semibold">$19.99</p>
-                    <button class="primary-btn mt-4 w-full py-2">Comprar Ahora</button>
-                </div>
-            @endforeach
-        </div>
-    </section>
-
-    <!-- Productos Populares -->
-    <section class="container mx-auto mt-12 px-4">
-        <h2 class="section-title text-center mb-6">Productos Populares</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            @foreach (['imagen6.jpg', 'imagen7.jpg', 'imagen8.jpg', 'imagen9.jpg'] as $imagen)
-                <div class="bg-white p-4 rounded-lg shadow-lg product-card">
-                    <img src="/imagenes/{{ $imagen }}" alt="Producto" class="w-full h-40 object-cover mb-4 rounded">
-                    <h3 class="text-lg font-bold text-gray-700">Producto {{ $loop->index + 5 }}</h3>
-                    <p class="text-blue-600 font-semibold">$24.99</p>
-                    <button class="primary-btn mt-4 w-full py-2">Ver Detalles</button>
+            <!-- Lista de productos -->
+            @foreach ([
+                ['imagen' => 'imagen2.jpg', 'nombre' => 'Auriculares', 'categoria' => 'Electrónica', 'precio' => '29.99'],
+                ['imagen' => 'imagen3.jpg', 'nombre' => 'Camiseta', 'categoria' => 'Moda', 'precio' => '19.99'],
+                ['imagen' => 'imagen4.jpg', 'nombre' => 'Lámpara LED', 'categoria' => 'Hogar', 'precio' => '15.49'],
+                ['imagen' => 'imagen5.jpg', 'nombre' => 'Pelota de Fútbol', 'categoria' => 'Deportes', 'precio' => '25.00'],
+                ['imagen' => 'imagen6.jpg', 'nombre' => 'Perfume', 'categoria' => 'Belleza', 'precio' => '39.99'],
+                ['imagen' => 'imagen7.jpg', 'nombre' => 'Muñeco', 'categoria' => 'Juguetes', 'precio' => '12.99'],
+                ['imagen' => 'imagen8.jpg', 'nombre' => 'Juego de Sartenes', 'categoria' => 'Hogar', 'precio' => '45.50'],
+                ['imagen' => 'imagen9.jpg', 'nombre' => 'Reloj Deportivo', 'categoria' => 'Moda', 'precio' => '60.00'],
+            ] as $producto)
+                <div class="bg-white p-4 rounded-lg shadow-lg product-card relative">
+                    <div class="relative">
+                        <!-- Imagen del producto -->
+                        <img src="/imagenes/{{ $producto['imagen'] }}" alt="Producto" class="w-full h-40 object-cover mb-4 rounded">
+                        
+                        <!-- Etiqueta de categoría -->
+                        <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">{{ $producto['categoria'] }}</span>
+                    </div>
+                    
+                    <!-- Nombre del producto -->
+                    <h3 class="text-lg font-bold text-gray-700 mb-1">{{ $producto['nombre'] }}</h3>
+                    
+                    <!-- Precio del producto -->
+                    <p class="text-blue-600 font-semibold text-xl mb-4">PEN {{ $producto['precio'] }}</p>
+                    
+                    <!-- Botones de acción -->
+                    <div class="flex space-x-2 mt-4">
+                        <a href="{{ route('login') }}" class="primary-btn py-2 px-4 w-full text-center">Ver Detalles</a>
+                        <a href="{{ route('login') }}" class="primary-btn py-2 px-4 w-full text-center">Comprar</a>
+                    </div>
                 </div>
             @endforeach
         </div>

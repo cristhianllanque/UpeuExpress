@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Producto;
+use App\Models\Compra;
 
 class ProductoController extends Controller
 {
@@ -41,6 +42,7 @@ class ProductoController extends Controller
             $producto->imagen = basename($path);
         }
 
+        $producto->user_id = auth()->id(); // Asociar el producto con el usuario autenticado
         $producto->save();
 
         return redirect()->route('dashboard')->with('success', 'Producto publicado exitosamente');
@@ -114,5 +116,16 @@ class ProductoController extends Controller
         $producto->delete();
 
         return redirect()->route('productos.index')->with('success', 'Producto eliminado exitosamente');
+    }
+
+    // Mostrar productos comprados
+    public function compras()
+    {
+        // Obtener los productos creados por la empresa autenticada
+        $productos = Producto::where('user_id', auth()->id())
+            ->with('compras.usuario') // Cargar las compras y los usuarios que las realizaron
+            ->get();
+
+        return view('productos.compras', compact('productos'));
     }
 }

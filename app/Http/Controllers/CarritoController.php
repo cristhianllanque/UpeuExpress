@@ -117,4 +117,14 @@ class CarritoController extends Controller
         // Descargar el comprobante en PDF
         return $pdf->download('comprobante_de_compra.pdf');
     }
+
+    // Método para mostrar productos publicados en el welcome
+    public function mostrarProductosEnWelcome()
+    {
+        // Obtener productos que están publicados
+        $productos = Producto::where('published', true)->get();
+
+        // Pasar los productos a la vista welcome
+        return view('welcome', compact('productos'));
+    }
 }

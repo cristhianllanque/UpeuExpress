@@ -8,9 +8,7 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 // Rutas principales
-Route::get('/', function () {
-    return view('welcome'); // Asegúrate de tener una vista llamada 'welcome'
-})->name('home');
+Route::get('/', [CarritoController::class, 'mostrarProductosEnWelcome'])->name('welcome');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -59,8 +57,9 @@ Route::post('/comprar', [CarritoController::class, 'comprar'])->name('comprar');
 
 Route::get('/checkout', [CarritoController::class, 'mostrarFormularioPago'])->name('carrito.checkout');
 Route::post('/procesar-compra', [CarritoController::class, 'procesarCompra'])->name('carrito.procesarCompra');
-Route::post('/comprar', [CarritoController::class, 'procesarCompra'])->name('comprar');
 
+// Productos comprados por postulantes (solo para empresas)
+Route::get('/productos/compras', [ProductoController::class, 'compras'])->name('productos.compras');
 
-//pdf
-Route::post('/procesar-compra', [CarritoController::class, 'procesarCompra'])->name('carrito.procesarCompra');
+Route::get('/productos/compradores', [ProductoController::class, 'verCompradores'])->name('productos.compradores');
+

@@ -13,28 +13,39 @@
         </div>
     @endif
 
+    <!-- Anuncio Temporal -->
+    <div id="popupAd" class="fixed bottom-10 right-10 w-80 h-80 bg-white rounded-lg shadow-lg overflow-hidden transition-opacity duration-700 z-50 hidden">
+        <button onclick="cerrarAnuncio()" class="absolute top-2 right-2 bg-red-500 text-white rounded-full px-2 py-1">✕</button>
+        <img id="popupImage" src="{{ asset('imagenes/imagen1.jpg') }}" alt="Anuncio" class="w-full h-full object-cover">
+    </div>
+
     <!-- Filtro de Categorías -->
-    <div class="bg-gray-100 py-4 shadow-md border-t border-gray-200">
-        <div class="container mx-auto flex flex-wrap justify-around text-gray-700">
-            <a href="{{ route('productos.index') }}" class="hover:text-blue-500 font-semibold">Todas</a>
-            <a href="{{ route('productos.index', ['categoria' => 'Electrónica']) }}" class="hover:text-blue-500 font-semibold">Electrónica</a>
-            <a href="{{ route('productos.index', ['categoria' => 'Moda']) }}" class="hover:text-blue-500 font-semibold">Moda</a>
-            <a href="{{ route('productos.index', ['categoria' => 'Hogar']) }}" class="hover:text-blue-500 font-semibold">Hogar</a>
-            <a href="{{ route('productos.index', ['categoria' => 'Deportes']) }}" class="hover:text-blue-500 font-semibold">Deportes</a>
-            <a href="{{ route('productos.index', ['categoria' => 'Belleza']) }}" class="hover:text-blue-500 font-semibold">Belleza</a>
-            <a href="{{ route('productos.index', ['categoria' => 'Juguetes']) }}" class="hover:text-blue-500 font-semibold">Juguetes</a>
-            <a href="{{ route('productos.index', ['categoria' => 'Ofertas Especiales']) }}" class="hover:text-blue-500 font-semibold">Ofertas Especiales</a>
+    <div class="bg-blue-600 py-4 shadow-md border-t border-blue-700 text-white">
+        <div class="container mx-auto flex flex-wrap justify-around">
+            <a href="{{ route('productos.index') }}" class="hover:text-blue-300 font-semibold">Todas</a>
+            <a href="{{ route('productos.index', ['categoria' => 'Electrónica']) }}" class="hover:text-blue-300 font-semibold">Electrónica</a>
+            <a href="{{ route('productos.index', ['categoria' => 'Moda']) }}" class="hover:text-blue-300 font-semibold">Moda</a>
+            <a href="{{ route('productos.index', ['categoria' => 'Hogar']) }}" class="hover:text-blue-300 font-semibold">Hogar</a>
+            <a href="{{ route('productos.index', ['categoria' => 'Deportes']) }}" class="hover:text-blue-300 font-semibold">Deportes</a>
+            <a href="{{ route('productos.index', ['categoria' => 'Belleza']) }}" class="hover:text-blue-300 font-semibold">Belleza</a>
+            <a href="{{ route('productos.index', ['categoria' => 'Juguetes']) }}" class="hover:text-blue-300 font-semibold">Juguetes</a>
+            <a href="{{ route('productos.index', ['categoria' => 'Ofertas Especiales']) }}" class="hover:text-blue-300 font-semibold">Ofertas Especiales</a>
         </div>
     </div>
 
+    <!-- Barra de búsqueda en tiempo real -->
+    <div class="container mx-auto my-8 px-4">
+        <input type="text" id="searchInput" placeholder="Buscar productos..." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" oninput="filterProducts()">
+    </div>
+
     <!-- Sección de Productos -->
-    <section class="container mx-auto mt-10 px-4">
+    <section class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">
             {{ $categoria ?? 'Ofertas del Día' }}
         </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div id="productContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach ($productos as $producto)
-                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 relative">
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 relative">
                     <div class="relative">
                         <img src="{{ asset('storage/imagenes/' . $producto->imagen) }}" alt="{{ $producto->nombre }}" class="w-full h-56 object-cover">
                         <!-- Etiqueta de descuento y calificación -->
@@ -108,4 +119,48 @@
             @endforeach
         </div>
     </section>
+
+    <script>
+        // Array de rutas de imágenes de anuncios
+        const anuncioImagenes = [
+            "{{ asset('imagenes/imagen10.jpg') }}",
+            "{{ asset('imagenes/imagen11.jpg') }}",
+            "{{ asset('imagenes/imagen12.jpg') }}",
+            "{{ asset('imagenes/imagen13.jpg') }}",
+            "{{ asset('imagenes/imagen14.jpg') }}"
+        ];
+
+        // Función para mostrar un anuncio temporal
+        function mostrarAnuncio() {
+            const popup = document.getElementById('popupAd');
+            const popupImage = document.getElementById('popupImage');
+            const randomIndex = Math.floor(Math.random() * anuncioImagenes.length);
+
+            popupImage.src = anuncioImagenes[randomIndex];
+            popup.classList.remove('hidden');  // Muestra el popup
+
+            setTimeout(() => {
+                popup.classList.add('hidden');  // Oculta el popup después de 5 segundos
+            }, 5000);
+        }
+
+        // Llama a la función de mostrar anuncio en un intervalo
+        setInterval(mostrarAnuncio, 20000);  // Muestra un anuncio cada 20 segundos
+
+        // Función para cerrar manualmente el anuncio
+        function cerrarAnuncio() {
+            const popup = document.getElementById('popupAd');
+            popup.classList.add('hidden');
+        }
+
+        // Función para buscar productos en tiempo real
+        function filterProducts() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach(card => {
+                const productName = card.querySelector('h3').textContent.toLowerCase();
+                card.style.display = productName.includes(input) ? 'block' : 'none';
+            });
+        }
+    </script>
 </x-app-layout>
