@@ -44,7 +44,7 @@
                         <x-label for="rol" value="Tipo de Cuenta" />
                         <select id="rol" name="rol" class="block mt-1 w-full border-2 border-gray-300 focus:border-orange-500 focus:ring focus:ring-orange-200 rounded-lg" onchange="toggleCvUploadField()" required>
                             <option value="empresa" {{ old('rol') == 'empresa' ? 'selected' : '' }}>Empresa</option>
-                            <option value="postulante" {{ old('rol') == 'postulante' ? 'selected' : '' }}>Postulante</option>
+                            <option value="postulante" {{ old('rol') == 'postulante' ? 'selected' : '' }}>Cliente</option>
                         </select>
                     </div>
 
